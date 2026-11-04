@@ -13,8 +13,7 @@
 2. [Modelo de dados](#-2-modelo-de-dados)
 3. [Instruções DDL — Criar banco de dados e tabelas](#-3-instruções-ddl--criar-banco-de-dados-e-tabelas)
 4. [Instruções DQL — 15 consultas](#-4-instruções-dql--15-consultas)
-5. [Como executar](#-5-como-executar)
-6. [Conclusão](#-6-conclusão)
+5. [Conclusão](#-5-conclusão)
 
 ---
 
@@ -392,33 +391,9 @@ ORDER BY total_arrecadado DESC;
 
 ---
 
-## 🚀 5. Como executar
 
-**Pelo terminal:**
 
-```bash
-mysql -u root -p < hospital_db_script.sql
-```
-
-**Pelo MySQL Workbench:**
-
-1. Abra o arquivo `hospital_db_script.sql` (*File → Open SQL Script*).
-2. Execute o script inteiro (⚡ *Execute*).
-3. Confira o banco `hospital_db` e as 6 tabelas no painel *Schemas*.
-
-> 💡 O script já executa o `DROP DATABASE`, o `CREATE DATABASE` e o `USE hospital_db`, então não é preciso criar o banco antes.
->
-> Para ver resultados nas consultas, insira registros de teste nas tabelas, nesta ordem (tabelas pai antes das filhas):
->
-> | Etapa | Tabelas |
-> |-------|---------|
-> | 1️⃣ Base | `pacientes` · `medicos` · `quartos` |
-> | 2️⃣ Dependentes | `internacoes` · `consultas` |
-> | 3️⃣ Associadas | `prescricoes` |
-
----
-
-## 🏁 6. Conclusão
+## 🏁 5. Conclusão
 
 O **Vida & Saúde** mostra como um banco relacional organiza a rotina de um hospital. Com **6 tabelas**, o modelo cobre pacientes, médicos, quartos, internações, consultas e prescrições.
 
