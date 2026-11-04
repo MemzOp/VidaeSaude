@@ -22,11 +22,11 @@
 
 O **Vida & Saúde** é um banco de dados relacional para um sistema **fictício** de gestão hospitalar. Ele organiza:
 
-| 👤 Pessoas | 🏨 Estrutura física | 📋 Atendimento |
+| 👤 Pessoas | | 📋 Atendimento |
 |-----------|--------------------|----------------|
-| Pacientes | Quartos            | Consultas      |
-| Médicos   |                    | Internações    |
-|           |                    | Prescrições    |
+| Pacientes |  | Consultas     |
+| Médicos   | | Internações    |
+|           | | Prescrições    |
 
 Todo o projeto está em um único arquivo: **`hospital_db_script.sql`**, dividido em duas partes:
 
