@@ -67,6 +67,75 @@ Para resolver isso, a equipe de DBAs Júniores propõe a **primeira versão de u
 
 As tabelas `internacoes` e `consultas` funcionam como tabelas associativas: uma mesma pessoa pode se internar várias vezes, um mesmo quarto recebe vários pacientes ao longo do tempo e um médico atende muitos pacientes.
 
+### Diagrama entidade-relacionamento
+
+```mermaid
+erDiagram
+    pacientes ||--o{ internacoes : "é internado em"
+    medicos   ||--o{ internacoes : "responde por"
+    quartos   ||--o{ internacoes : "acomoda"
+    pacientes ||--o{ consultas   : "realiza"
+    medicos   ||--o{ consultas   : "atende"
+    consultas ||--o{ prescricoes : "gera"
+
+    pacientes {
+        INT id_paciente PK
+        VARCHAR nome
+        CHAR cpf UK
+        DATE data_nascimento
+        CHAR sexo
+        VARCHAR convenio
+        VARCHAR telefone
+        VARCHAR cidade
+    }
+
+    medicos {
+        INT id_medico PK
+        VARCHAR nome
+        VARCHAR crm UK
+        VARCHAR especialidade
+        VARCHAR telefone
+    }
+
+    quartos {
+        INT id_quarto PK
+        VARCHAR numero UK
+        VARCHAR tipo
+        INT andar
+        DECIMAL valor_diaria
+    }
+
+    internacoes {
+        INT id_internacao PK
+        INT id_paciente FK
+        INT id_medico FK
+        INT id_quarto FK
+        DATE data_entrada
+        DATE data_saida
+        VARCHAR motivo
+    }
+
+    consultas {
+        INT id_consulta PK
+        INT id_paciente FK
+        INT id_medico FK
+        DATETIME data_hora
+        VARCHAR status
+        DECIMAL valor
+    }
+
+    prescricoes {
+        INT id_prescricao PK
+        INT id_consulta FK
+        VARCHAR medicamento
+        VARCHAR dosagem
+        VARCHAR frequencia
+        INT duracao_dias
+    }
+```
+
+**Como ler o diagrama:** `PK` é chave primária, `FK` é chave estrangeira e `UK` é valor único. O símbolo `||--o{` significa "um para muitos": por exemplo, um paciente (`||`, exatamente um) pode ter zero ou várias (`o{`) internações.
+
 ### Decisões de modelagem (1ª, 2ª e 3ª Forma Normal)
 
 - **1FN:** todos os campos guardam valores atômicos (telefone, cidade e CPF em colunas próprias; cada medicamento de uma consulta é uma linha de `prescricoes`, e não uma lista dentro de um campo).
@@ -126,7 +195,7 @@ CREATE TABLE quartos (
     id_quarto     INT AUTO_INCREMENT PRIMARY KEY,
     numero        VARCHAR(10)   NOT NULL,
     tipo          VARCHAR(20)   NOT NULL,
-    andar         TINYINT       NOT NULL,
+    andar         INT           NOT NULL,
     valor_diaria  DECIMAL(10,2) NOT NULL,
     CONSTRAINT uq_quartos_numero UNIQUE (numero),
     CONSTRAINT ck_quartos_tipo CHECK (tipo IN ('Enfermaria', 'Apartamento', 'UTI')),
@@ -190,7 +259,7 @@ CREATE TABLE prescricoes (
     medicamento    VARCHAR(80)  NOT NULL,
     dosagem        VARCHAR(30)  NOT NULL,
     frequencia     VARCHAR(40)  NOT NULL,
-    duracao_dias   SMALLINT     NOT NULL,
+    duracao_dias   INT          NOT NULL,
     CONSTRAINT fk_prescricoes_consulta FOREIGN KEY (id_consulta)
         REFERENCES consultas (id_consulta)
         ON DELETE RESTRICT ON UPDATE CASCADE,
