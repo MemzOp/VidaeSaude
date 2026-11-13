@@ -151,12 +151,11 @@ erDiagram
 ```sql
 -- =====================================================
 -- Hospital Geral Vida & Saúde - Script DDL
--- SGBD: MySQL 8.0.16+
+
 -- =====================================================
 
 CREATE DATABASE IF NOT EXISTS hospital_db
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
+    
 
 USE hospital_db;
 
@@ -172,8 +171,7 @@ CREATE TABLE pacientes (
     convenio         VARCHAR(50)  NOT NULL DEFAULT 'Particular',
     telefone         VARCHAR(20),
     cidade           VARCHAR(60)  NOT NULL,
-    CONSTRAINT uq_pacientes_cpf UNIQUE (cpf),
-    CONSTRAINT ck_pacientes_sexo CHECK (sexo IN ('F', 'M'))
+   
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
@@ -185,7 +183,7 @@ CREATE TABLE medicos (
     crm            VARCHAR(15)  NOT NULL,
     especialidade  VARCHAR(50)  NOT NULL,
     telefone       VARCHAR(20),
-    CONSTRAINT uq_medicos_crm UNIQUE (crm)
+  
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
@@ -197,9 +195,7 @@ CREATE TABLE quartos (
     tipo          VARCHAR(20)   NOT NULL,
     andar         INT           NOT NULL,
     valor_diaria  DECIMAL(10,2) NOT NULL,
-    CONSTRAINT uq_quartos_numero UNIQUE (numero),
-    CONSTRAINT ck_quartos_tipo CHECK (tipo IN ('Enfermaria', 'Apartamento', 'UTI')),
-    CONSTRAINT ck_quartos_diaria CHECK (valor_diaria > 0)
+    
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
@@ -213,17 +209,7 @@ CREATE TABLE internacoes (
     data_entrada   DATE         NOT NULL,
     data_saida     DATE         NULL,
     motivo         VARCHAR(150) NOT NULL,
-    CONSTRAINT fk_internacoes_paciente FOREIGN KEY (id_paciente)
-        REFERENCES pacientes (id_paciente)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT fk_internacoes_medico FOREIGN KEY (id_medico)
-        REFERENCES medicos (id_medico)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT fk_internacoes_quarto FOREIGN KEY (id_quarto)
-        REFERENCES quartos (id_quarto)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT ck_internacoes_datas
-        CHECK (data_saida IS NULL OR data_saida >= data_entrada)
+ 
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
@@ -238,16 +224,7 @@ CREATE TABLE consultas (
     valor        DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_consultas_paciente FOREIGN KEY (id_paciente)
         REFERENCES pacientes (id_paciente)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT fk_consultas_medico FOREIGN KEY (id_medico)
-        REFERENCES medicos (id_medico)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    -- evita conflito de horário do médico e do paciente
-    CONSTRAINT uq_consultas_medico_horario UNIQUE (id_medico, data_hora),
-    CONSTRAINT uq_consultas_paciente_horario UNIQUE (id_paciente, data_hora),
-    CONSTRAINT ck_consultas_status
-        CHECK (status IN ('Agendada', 'Realizada', 'Cancelada')),
-    CONSTRAINT ck_consultas_valor CHECK (valor >= 0)
+   
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
@@ -260,10 +237,7 @@ CREATE TABLE prescricoes (
     dosagem        VARCHAR(30)  NOT NULL,
     frequencia     VARCHAR(40)  NOT NULL,
     duracao_dias   INT          NOT NULL,
-    CONSTRAINT fk_prescricoes_consulta FOREIGN KEY (id_consulta)
         REFERENCES consultas (id_consulta)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT ck_prescricoes_duracao CHECK (duracao_dias > 0)
 ) ENGINE=InnoDB;
 ```
 
